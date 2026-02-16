@@ -1,10 +1,10 @@
-# Extreme-Dashboard-Makeover
+# Dashboard 大改造
 
 ![Grafana Logo](grafana.png)
 
 
-## Breakouts:
+## ブレイクアウトセッション:
 
-[Breakout 1: Solo Makeover](./solo_makeover.md)
+[ブレイクアウト 1: Solo Makeover（ソロ改造）](./solo_makeover.md)
 
-[(Optional) Take home exercise 2: Individual Challenge](./individual_challenge.md)
+[（任意）持ち帰り演習 2: Individual Challenge（個人チャレンジ）](./individual_challenge.md)

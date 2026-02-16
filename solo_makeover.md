@@ -1,211 +1,211 @@
-# Solo Makeover
-We will be revamping the following dashboard.
+# Solo Makeover（ソロ改造）
+以下の dashboard を改造していきます。
 
 ![Dull Dashboard](img/dull-dashboard.png)
 
-**Prerequisite**: We first need to import this dashboard.
-Follow these steps to Import it:
+**前提条件**: まず、この dashboard を import する必要があります。
+以下の手順で import してください:
 
-1. Click the menu button (☰) at the top left, and then click on *Dashboards*.
-2. On the Dashboards screen, click the *New* button and then click *Import*.
-3. On the Import Dashboard screen, in the *Import via grafana.com* field, type in `16413` and then click *Load*.
-4. You will be asked to choose three of your dashboard's data sources:
-    - For TestData DB, choose `TestData DB`.
-    - For Prometheus (Cloud), choose `Prometheus (Cloud)`.
-    - For LokiNGINX, choose `Loki (Cloud)`.
-    - Click on *Import*.
+1. 左上のメニューボタン（☰）をクリックし、*Dashboards* をクリックします。
+2. Dashboards 画面で *New* ボタンをクリックし、*Import* をクリックします。
+3. Import Dashboard 画面の *Import via grafana.com* フィールドに `16413` と入力し、*Load* をクリックします。
+4. data source を3つ選択するよう求められます:
+    - TestData DB には `TestData DB` を選択してください。
+    - Prometheus (Cloud) には `Prometheus (Cloud)` を選択してください。
+    - LokiNGINX には `Loki (Cloud)` を選択してください。
+    - *Import* をクリックします。
 
-*While our existing dashboard already has useful information such as RED metrics - request rates, errors, and duration/latency - for our service as well as state information for the underlying Kubernetes pods and end-user activity from a geographic lens, our aim is to make the information on the dashboard easier to understand and more visually appealing.*
+*既存の dashboard には、サービスの RED metrics（リクエストレート、エラー、レイテンシ）、Kubernetes Pod のステータス情報、地域別のエンドユーザーアクティビティなど、すでに有用な情報が含まれています。今回の目的は、dashboard 上の情報をより分かりやすく、視覚的にも魅力的なものに改善することです。*
 
-## Convert the 'Error Rates' panel from a time series to a stat panel
+## 'Error Rates' panel を time series から stat panel に変換する
 
-We will edit the Error Rates panel first.  We want to add context to what error rates are acceptable, in a danger zone, or are in violation of an internal Service Level Objective (SLO).
+まず Error Rates panel を編集します。エラーレートが許容範囲内か、危険ゾーンにあるか、社内 Service Level Objective（SLO）に違反しているかを分かりやすく表示できるようにします。
 
 ![Error Rate Panel](img/error-rate-panel.png)
 
-1. Edit the *Error Rates* panel (hover over the panel's title, click on the three vertical dots at the top right, and then click *Edit*)
-2. Switch the Visualization Type from *Time Series* (or *Graph* in older versions of Grafana) to *Stat*
-3. Under *Stat styles*:
-    * Change Orientation from Auto to Horizontal.
-    * Change Color Mode from Value to Background Gradient.
-4. Expand the 'Value Mappings' section and then click *Add value mappings*:
-    * If there is a default setting that null maps to N/A, click on the trash icon 🗑 to remove that default.
-    * Click *Add a New Mapping* and then *Range*. Set range from 0 to 1 with Display Text of *OK*. Set color to Blue.
-    * Click *Add a New Mapping* and then *Range*. Set range from 1 to 2 with Display Text of *Service Degraded*. Set color to Yellow.
-    * Click *Add a New Mapping* and then *Range*. Set range from 2 to 100 with Display Text of *SLO Violation*. Set color to Orange.
-    * Click on *Update*
+1. *Error Rates* panel を編集します（panel のタイトルにカーソルを合わせ、右上の縦3点メニューをクリックし、*Edit* をクリック）
+2. Visualization Type を *Time Series*（古いバージョンの Grafana では *Graph*）から *Stat* に切り替えます
+3. *Stat styles* の設定:
+    * Orientation を Auto から Horizontal に変更します。
+    * Color Mode を Value から Background Gradient に変更します。
+4. 'Value Mappings' セクションを展開し、*Add value mappings* をクリックします:
+    * null が N/A にマッピングされるデフォルト設定がある場合は、ゴミ箱アイコン 🗑 をクリックして削除します。
+    * *Add a New Mapping* をクリックし、*Range* を選択します。範囲を 0 〜 1 に設定し、Display Text を *OK* にします。色は Blue に設定します。
+    * *Add a New Mapping* をクリックし、*Range* を選択します。範囲を 1 〜 2 に設定し、Display Text を *Service Degraded* にします。色は Yellow に設定します。
+    * *Add a New Mapping* をクリックし、*Range* を選択します。範囲を 2 〜 100 に設定し、Display Text を *SLO Violation* にします。色は Orange に設定します。
+    * *Update* をクリックします。
 
-    The value mapping settings should look like this:
+    Value mapping の設定は以下のようになります:
 
     ![Value Mappings](img/value-mappings.png)
 
-5.  Change the Panel Title to *SLO Status(Errors) per Data Center*
-6.  Click on *Save Dashboard*
-## Convert the 'K8s Service Status' panel from a table to a polystat panel
-This table is showing us tons of information that we already know.  The original goal of this table was to show a state of 1 (UP) or 0 (DOWN) for each of our service containers.   Our new goal is to simplify the presentation of the information using a *polystat* panel.
-1. Edit the *K8s Service Status* panel (hover over the panel's title, click the three vertical dots to show the context menu, and then click *Edit*)
-2. Switch the Visualization Type from *Table* to *Polystat*
+5.  Panel Title を *SLO Status(Errors) per Data Center* に変更します
+6.  *Save Dashboard* をクリックします
+## 'K8s Service Status' panel を table から polystat panel に変換する
+この table には、すでに分かっている情報が大量に表示されています。もともとこの table の目的は、各サービスコンテナのステータスが 1（UP）か 0（DOWN）かを表示することでした。今回は *polystat* panel を使って、情報の表示をシンプルにすることを目指します。
+1. *K8s Service Status* panel を編集します（panel のタイトルにカーソルを合わせ、縦3点メニューをクリックしてコンテキストメニューを表示し、*Edit* をクリック）
+2. Visualization Type を *Table* から *Polystat* に切り替えます
 
-    You will notice that all of the rows have been aggregated into one average of all values.  To separate our data per container, change the query's *Format* from Table to Time Series.  In newer versions of the Grafana UI, this option is under *Options*.
+    すべての行が1つの平均値に集約されていることに気づくでしょう。コンテナごとにデータを分けるには、query の *Format* を Table から Time Series に変更します。新しいバージョンの Grafana UI では、このオプションは *Options* の下にあります。
 
     ![Table to Timeseries](img/table-to-timeseries.png)
 
-3. In the panel options, under the *Global* settings group, change Decimals from `2` to `0` as the *Instant* value will always be a 0 or 1.
-4. Change the Polygon Border Color to Transparent.
-5. Under Thresholds, click on *Add Threshold*:
-    * For the default threshold, leave the value of 0, but change Color Mode from *ok* to *critical*.  Additionally, change the Color from Red to Orange.
-    * Click *Add Threshold* to add a second threshold level. A new Threshold will appear.
-    * For the second threshold, set value to 1 with Color Mode *ok*.  Additionally, change the Color from Green to Blue.
-7. At the bottom of the options panel, click on *Add value mappings*.
-    * Add a Value mapping, setting the value condition to 1, and the display text to *UP*.
-    * Add a second Value mapping, condition 0 and display text *DOWN*.
-8. Change the Font Family to 'Inter'.
-9. Toggle Automate Font Color to the OFF position. This should render the text in black. Or, use the Font Color box to pick a color of your choice.
-10. Click *Save Dashboard* to the leave the edit mode of that panel.
-The panel should look similar to what is shown below:
+3. panel オプションの *Global* 設定グループで、Decimals を `2` から `0` に変更します。*Instant* の値は常に 0 か 1 なので、小数点は不要です。
+4. Polygon Border Color を Transparent に変更します。
+5. Thresholds で *Add Threshold* をクリックします:
+    * デフォルトの threshold は値 0 のまま、Color Mode を *ok* から *critical* に変更します。さらに、色を Red から Orange に変更します。
+    * *Add Threshold* をクリックして、2つ目の threshold レベルを追加します。新しい Threshold が表示されます。
+    * 2つ目の threshold は値を 1 に設定し、Color Mode を *ok* にします。さらに、色を Green から Blue に変更します。
+7. オプション panel の下部で *Add value mappings* をクリックします。
+    * Value mapping を追加し、値の条件を 1、display text を *UP* に設定します。
+    * 2つ目の Value mapping を追加し、条件を 0、display text を *DOWN* に設定します。
+8. Font Family を 'Inter' に変更します。
+9. Automate Font Color を OFF にします。これでテキストが黒で表示されるはずです。または、Font Color ボックスを使って好みの色を選択できます。
+10. *Save Dashboard* をクリックして、この panel の編集モードを終了します。
+panel は以下のような表示になるはずです:
 
     ![K8s Service Status](img/k8s-service-status.png)
 
-## Convert the 'Customer Activity' panel from a stat panel to a geomap
-This one is a mess. I've been told that this data is from OSS [Loki](https://grafana.com/oss/loki/), our logging tool, and represents the number of hits coming from each geographic region. It is colorful, but I have a very difficult time interpreting the information.  Let's change the visualization to a map!
-1. Edit the *Customer Activity* panel (hover over the panel's title, click the three vertical dots to show the context menu, and then click *Edit*)
-2. Switch the Visualization Type from *Stat* to *Geomap*
-3. In the *Search options* box in the top right, type `basemap layer`. The basemap layer option will be shown, and all other options will be hidden.
-4. Under *Basemap layer*, change the Layer type to *ArcGIS MapServer* with a Server instance of *World Ocean*.
+## 'Customer Activity' panel を stat panel から geomap に変換する
+この panel はかなり見づらい状態です。このデータは OSS の [Loki](https://grafana.com/oss/loki/)（ログ収集ツール）から取得したもので、各地域からのアクセス数を表しているとのことです。カラフルではありますが、情報を読み取るのが非常に難しいです。visualization を地図に変更しましょう！
+1. *Customer Activity* panel を編集します（panel のタイトルにカーソルを合わせ、縦3点メニューをクリックしてコンテキストメニューを表示し、*Edit* をクリック）
+2. Visualization Type を *Stat* から *Geomap* に切り替えます
+3. 右上の *Search options* ボックスに `basemap layer` と入力します。basemap layer のオプションが表示され、他のオプションは非表示になります。
+4. *Basemap layer* で、Layer type を *ArcGIS MapServer* に変更し、Server instance を *World Ocean* に設定します。
 ![Base layer](img/Base-layer.png)
-5. Click the '&#215; Clear' text in the Search bar to clear your search for "basemap layer".
-6. CRITICAL! Since this is a point-in-time view, validate the *Query Type* of the query is __Instant__ and not Range.
+5. 検索バーの '&#215; Clear' をクリックして、"basemap layer" の検索をクリアします。
+6. 重要！ これはある時点のデータを表示するビューなので、query の *Query Type* が Range ではなく __Instant__ になっていることを確認してください。
 ![Query Type](img/Query-Type.png)
-7. We want to add markers on the map.  Again using the *Search options* in the top right, find *Map layer* and click on Layer 1 *markers*. We want a lookup of the country by our *geoip_country_code* field.
-8. To do this, under *Location Mode*, click *Lookup* and then under Lookup Field, choose *geoip_country_code*.  You should now see data on your map. But we're not done!
-9. Under Styles, change Size from *Fixed Value* to *Value #Hits by geolocation*.
-10. Change Symbol from Circles to Star. Do this by selecting the circle.svg text, selecting Star and hitting 'Select'.
-11. Change Color from *Fixed color* to *Value #Hits by geolocation*.
-12. The colors of blue and orange seem to blend in a bit much on the map, so we need to make them stand out a bit more. Using the *Search options* box in the top right, enter `thresholds`. Change the base color to Dark Purple by clicking on the orange circle, then clicking on dark purple, and then click outside of that popup window.
-14. For a threshold of 10, change the color to dark Orange using the same method as above.
-15. Delete the 3rd threshold value of 20 by clicking on its garbage can icon.
-16. Click Save Dashboard to the leave edit mode of that Panel.
-## Update the 'Latency for Sockshop App' panel
-Since this service latency graph is viewed by dozens of people, we know statistically that at least 2 people viewing this graph are colorblind.  That said, the Product owner of Sockshop called the colors 'uninspiring'.  You also notice that the legend is rough around the edges.
-1. Edit the *Latency for Sockshop App* panel (hover over the panel's title, click the three vertical dots to show the context menu, and then click *Edit*)
-2. Switch the Visualization Type to *Time Series*, if it isn't already.
-3. Let's fix the legend first:
-    * Under the query on the left, in the Options panel, change the Legend type from Verbose to *Custom* and enter `{{ job }}`.  You will notice that the name of the job is displayed at the bottom of the graph, instead of the raw key/value pair.  But we still don't like the fact that the namespace of _development_ still appears.  So, let's use a _transformation_ to rename our fields.
-    * Click on _Transform_ and then _Rename by Regex_ (scroll down the list or use the 'Add transformation' search).  For match, let's do 2 string captures - before and after the */*.
-    * For match, type in `.+/(.+)`
-    * For the _Replace_ field, type in `$1`
-4. Someone else said this graph, denoted in seconds, would be easier to understand if it were in milliseconds.
-    * Let's change the query on the left hand side by adding *\* 1000* to the end of the query
-    * Add a unit to the y-axis: Under the panel's search options (top right), type in _Unit_.  For the unit, use _Time / milliseconds (ms)_.
-5. We now want to make it easier for our colorblind colleagues to read.
-    * For all lines in the graph: Use the  *Graph Styles*, choose a Line Width of 2 and a Fill opacity of 0
+7. 地図上にマーカーを追加します。右上の *Search options* を使って *Map layer* を検索し、Layer 1 の *markers* をクリックします。*geoip_country_code* フィールドで国を参照（lookup）したいと思います。
+8. *Location Mode* で *Lookup* をクリックし、Lookup Field で *geoip_country_code* を選択します。これで地図上にデータが表示されるはずです。ただし、まだ完了ではありません！
+9. Styles で、Size を *Fixed Value* から *Value #Hits by geolocation* に変更します。
+10. Symbol を Circles から Star に変更します。circle.svg のテキストをクリックし、Star を選択して 'Select' をクリックします。
+11. Color を *Fixed color* から *Value #Hits by geolocation* に変更します。
+12. 青とオレンジの色が地図上で溶け込んでしまうため、もう少し目立たせる必要があります。右上の *Search options* ボックスに `thresholds` と入力します。ベースカラーを Dark Purple に変更します。オレンジの丸をクリックし、Dark Purple を選択してから、ポップアップウィンドウの外側をクリックして閉じます。
+14. threshold 10 について、同じ方法で色を Dark Orange に変更します。
+15. 3つ目の threshold（値 20）のゴミ箱アイコンをクリックして削除します。
+16. *Save Dashboard* をクリックして、この panel の編集モードを終了します。
+## 'Latency for Sockshop App' panel を更新する
+このサービスレイテンシのグラフは多くの人が閲覧するため、統計的に少なくとも2人は色覚に特性のある方がいることが見込まれます。また、Sockshop のプロダクトオーナーからは色が「つまらない」という指摘がありました。さらに、凡例（legend）も少し整理が必要です。
+1. *Latency for Sockshop App* panel を編集します（panel のタイトルにカーソルを合わせ、縦3点メニューをクリックしてコンテキストメニューを表示し、*Edit* をクリック）
+2. Visualization Type が *Time Series* になっていることを確認し、なっていなければ切り替えます。
+3. まず legend を修正しましょう:
+    * 左側の query の Options panel で、Legend type を Verbose から *Custom* に変更し、`{{ job }}` と入力します。グラフの下部に、生の key/value ペアではなく、ジョブ名が表示されるようになります。しかし、namespace の _development_ がまだ表示されているのが気になります。そこで、_transformation_ を使ってフィールド名を変更しましょう。
+    * _Transform_ をクリックし、_Rename by Regex_ を選択します（リストをスクロールするか、'Add transformation' の検索を使ってください）。match では、*/* の前後で2つの文字列をキャプチャします。
+    * match に `.+/(.+)` と入力します
+    * _Replace_ フィールドに `$1` と入力します
+4. 秒単位で表示されているこのグラフを、ミリ秒に変換した方が分かりやすいという意見がありました。
+    * 左側の query の末尾に *\* 1000* を追加します
+    * Y軸に単位を追加します: panel の右上の search options に _Unit_ と入力し、単位として _Time / milliseconds (ms)_ を選択します。
+5. 色覚に特性のある同僚にも読みやすくしましょう。
+    * グラフ内のすべての線について: *Graph Styles* で Line Width を 2、Fill opacity を 0 に設定します
 
         ![Graph styles](img/Graph-styles.png)
 
-    * Let's make dataset _user_ a dashed line.  In the upper right, click on *Overrides* and _Add field override_. Then, choose "Fields with Name" _user_. Next, add override property _Graph styles > Line style_. Change from Solid to *Dash*. Keep *10,10* as the *line,space* setting.
-    * We will make field _payment_ a dashed line as well. Again, click on _Add field override_, choosing "Fields with Name" _payment_. Next, add override property _Graph styles > Line style_. Change from Solid to *Dash*. Use a *5,10* dash line style.
-    * Let's make dataset _catalogue_ a dashed line. Add an override for Fields with name _catalogue_, adding a Line Style override. For the dash pattern, we want to see long-short-short, and so to do this, we choose *30,3,3*, the last item in the dropdown.
-    * Choose field with name _carts_ and Add override property.  In search, find _Graph styles > Line style_. Change from Solid to *Dots* and keep the *0,10* *line,space* setting.
-    * We will keep _orders_ as-is.
-6. Click *Save Dashboard*. Below is what your panel should look like:
+    * データセット _user_ を破線にします。右上の *Overrides* をクリックし、_Add field override_ を選択します。"Fields with Name" で _user_ を選択します。次に、override property として _Graph styles > Line style_ を追加します。Solid から *Dash* に変更し、*line,space* の設定は *10,10* のままにします。
+    * フィールド _payment_ も破線にします。再度 _Add field override_ をクリックし、"Fields with Name" で _payment_ を選択します。次に、override property として _Graph styles > Line style_ を追加します。Solid から *Dash* に変更し、dash の線スタイルは *5,10* を使用します。
+    * データセット _catalogue_ も破線にします。Fields with name で _catalogue_ の override を追加し、Line Style の override を追加します。dash パターンは長-短-短にしたいので、*30,3,3*（ドロップダウンの最後の項目）を選択します。
+    * Fields with name で _carts_ を選択し、Add override property をクリックします。検索で _Graph styles > Line style_ を見つけます。Solid から *Dots* に変更し、*line,space* の設定は *0,10* のままにします。
+    * _orders_ はそのままにしておきます。
+6. *Save Dashboard* をクリックします。panel は以下のような表示になるはずです:
 
     ![Sockshop App](img/sockshop-app.png)
 
-7. One more fix!  We notice that the two blue colors are just too similar, and we want to make it obvious.  So, right from the dashboard, we click on the blue line associated with _user_ in the legend, and a set of default colors appear.  Choose Purple.
-8. Save the dashboard.
-## Convert the 'Server Request Rates' panel from a time series to a bar gauge panel
-Like our first panel, we want context to understand what good looks like.  Knowing our internal data patterns, we want to avoid service overload conditions where end-user performance can be affected.
-1. Edit the *Server Request Rates* panel (hover over the panel's title, click the three vertical dots to show the context menu, and then click *Edit*)
-2. Change the Panel Title to *Server Request Rates per Second* (i.e. add "per Second" for clarity)
-3. Switch the Visualization Type from *Time Series* to *Bar Gauge*
-4. Under *Bar Gauge*:
-    * Change Orientation (Layout Orientation) from Auto to Horizontal.
-    * Change Display Mode from *Gradient* to *Retro LCD*
-5. Under Thresholds (At the bottom of the menu panel on the right):
-    * Change the base color from Green to Blue
-    * Change the 2nd color from Red to Yellow and the threshold level from 80 to 45.
-    * Add a third threshold level, 55.  Set color to Orange.
-    * Select Save Dashboard to apply your panel settings.
+7. もう1つ修正があります！ 2つの青色が似すぎていて区別しにくいので、はっきり区別できるようにしましょう。dashboard 上で、legend にある _user_ に対応する青い線をクリックすると、デフォルトの色一覧が表示されます。Purple を選択してください。
+8. dashboard を保存します。
+## 'Server Request Rates' panel を time series から bar gauge panel に変換する
+最初の panel と同様に、何が良い状態なのかを把握するためのコンテキストが必要です。社内のデータパターンを把握しているため、エンドユーザーのパフォーマンスに影響が出るサービス過負荷の状態を回避したいと考えています。
+1. *Server Request Rates* panel を編集します（panel のタイトルにカーソルを合わせ、縦3点メニューをクリックしてコンテキストメニューを表示し、*Edit* をクリック）
+2. Panel Title を *Server Request Rates per Second* に変更します（分かりやすくするために "per Second" を追加）
+3. Visualization Type を *Time Series* から *Bar Gauge* に切り替えます
+4. *Bar Gauge* の設定:
+    * Orientation（Layout Orientation）を Auto から Horizontal に変更します。
+    * Display Mode を *Gradient* から *Retro LCD* に変更します。
+5. Thresholds（右側メニュー panel の下部）の設定:
+    * ベースカラーを Green から Blue に変更します
+    * 2番目の色を Red から Yellow に変更し、threshold レベルを 80 から 45 に変更します。
+    * 3番目の threshold レベル 55 を追加し、色を Orange に設定します。
+    * *Save Dashboard* をクリックして panel の設定を適用します。
 
-Below is what your panel should look like:
+panel は以下のような表示になるはずです:
 
 ![Webserver Request Rates](img/webserver-request-rates.png)
 
-## Add existing library panels
-Remembering that someone saved some valuable service KPI panels to your Panel Library, adding them will give our users a better picture of how our service is being delivered.
+## 既存の library panel を追加する
+以前、有用なサービス KPI の panel が Panel Library に保存されていたことを思い出してください。これらを追加することで、サービスの提供状況をより分かりやすく把握できるようになります。
 
-1. From your dashboard, click the _Add_ button at the top of the screen, and then _Import from Library_. 
+1. dashboard 上で、画面上部の _Add_ ボタンをクリックし、_Import from Library_ を選択します。
 
-2. Search for the word "Apdex" and choose Panel, "Service APDEX".
+2. "Apdex" と検索し、Panel "Service APDEX" を選択します。
 
     ![Add Library Panel](img/add-panel.png)
 
-    ⚠️ **NOTE:** This Library Panel is created from a test data source, so it will initially appear blank. Continue with the next steps to add the two other panels.
+    ⚠️ **注意:** この Library Panel はテストデータソースから作成されているため、最初は空白で表示されます。次の手順に進んで、残り2つの panel を追加してください。
 
-2. Repeat this process, searching for "Score" and choosing panel, "Infrastructure - Error Score".
-3. Repeat this process a third time, searching for "sock" and choosing panel, "Latency Profile, Sockshop Application".
-5. Critical - Save your dashboard as you've done some fine work thus far! Then you can reload the dashboard to see the new panels.
+2. 同じ手順を繰り返し、"Score" と検索して Panel "Infrastructure - Error Score" を選択します。
+3. もう一度同じ手順を繰り返し、"sock" と検索して Panel "Latency Profile, Sockshop Application" を選択します。
+5. 重要 - ここまでの作業を保存しましょう！ dashboard を保存してから、リロードして新しい panel を確認してください。
 
-After adding these panels, you notice at the top they all have a link icon. These *Panel drilldown* links go to another, more detailed dashboard... score!  That will save us a ton of time building the detailed service view.
+これらの panel を追加すると、上部にリンクアイコンが表示されていることに気づくでしょう。これらの *Panel drilldown* リンクは、より詳細な別の dashboard に遷移します。これで、詳細なサービスビューを一から作る手間が大幅に省けます！
 
-To import that drilldown dashboard (Called `Sockshop Performance`):
+この drilldown 先の dashboard（`Sockshop Performance`）を import するには:
 
-1. Click the menu button (☰) at the top left, and then click on *Dashboards*.
-2. On the Dashboards screen, click the *New* button and then click *Import*.
-2. In the Import via grafana.com field, type in `16416` and then click *Load*.
-3. You will be asked to choose your dashboard's data source:
-    - For Prometheus (Cloud), choose `Prometheus (Cloud)`.
-4. Click on *Import*.
+1. 左上のメニューボタン（☰）をクリックし、*Dashboards* をクリックします。
+2. Dashboards 画面で *New* ボタンをクリックし、*Import* をクリックします。
+2. Import via grafana.com フィールドに `16416` と入力し、*Load* をクリックします。
+3. data source を選択するよう求められます:
+    - Prometheus (Cloud) には `Prometheus (Cloud)` を選択してください。
+4. *Import* をクリックします。
 
-However, you want to add a similar drilldown to the _SLO Status (Errors) per Data Center_ panel (i.e. the renamed "Error Rates" panel) just in case users don't see the panel links.
-1. Open the "dull dashboard" (find it in Home &rarr; Dashboards).
-2. Edit the _SLO Status (Errors) per Data Center_ panel and find the category *Data Links* (3rd from the bottom - _not_ Panel Links).
-3. Click _Add Link_ and add the following:
-    * For Title, type in _Sockshop Service Details_.
-    * For URL, paste in `/d/b2kdXLwnz/sockshop-performance?orgId=1`
-    * Select _Open in new tab_ and click *Save*.
-4. Click *Save Dashboard* to return to the Dashboard and then click the *Save* icon to save your changes.
-5. Now that you have saved your work, click anywhere on the SLO Status (Errors) graph to validate it drills into that other detailed dashboard.
+次に、ユーザーが panel のリンクに気づかない場合に備えて、_SLO Status (Errors) per Data Center_ panel（名前を変更した "Error Rates" panel）にも同様の drilldown を追加しましょう。
+1. "dull dashboard" を開きます（Home &rarr; Dashboards から見つけてください）。
+2. _SLO Status (Errors) per Data Center_ panel を編集し、*Data Links* カテゴリを見つけます（下から3番目です - Panel Links ではなく _Data Links_ です）。
+3. _Add Link_ をクリックし、以下を設定します:
+    * Title に _Sockshop Service Details_ と入力します。
+    * URL に `/d/b2kdXLwnz/sockshop-performance?orgId=1` を貼り付けます。
+    * _Open in new tab_ を選択し、*Save* をクリックします。
+4. *Save Dashboard* をクリックして Dashboard に戻り、*Save* アイコンをクリックして変更を保存します。
+5. 保存が完了したら、SLO Status (Errors) グラフの任意の場所をクリックして、詳細な dashboard に遷移することを確認します。
 
-## Add our company logo
-For a bit of flair, we'd like to add our company logo.  To do so:
-1. In the (formerly) dull dashboard, click on the _Add_ button, then select _Visualization_.
-2. On the right hand side, click on the default "Time Series" and search for 'Text'. Choose a *Text* panel.
-3. For _mode_ in the bottom right, switch from Markdown to HTML.
-4. Remove the default text and paste in the following HTML:
+## 会社のロゴを追加する
+見た目にアクセントを加えるため、会社のロゴを追加しましょう:
+1. （以前の）地味な dashboard で、_Add_ ボタンをクリックし、_Visualization_ を選択します。
+2. 右側でデフォルトの "Time Series" をクリックし、'Text' と検索して *Text* panel を選択します。
+3. 右下の _mode_ で、Markdown から HTML に切り替えます。
+4. デフォルトのテキストを削除し、以下の HTML を貼り付けます:
 
     ```html
     <center><img align="center" src="https://i.pinimg.com/originals/74/a0/a5/74a0a51848fb3717c671598dc675c654.jpg" ></center>
     ```
 
-5. Remove the Panel Title, Click on _Transparent Background_ and click *Save Dashboard*.
-6. Size the panel appropriately.
+5. Panel Title を削除し、_Transparent Background_ をクリックしてから *Save Dashboard* をクリックします。
+6. panel を適切なサイズに調整します。
 
-## Arrange our panels
-Finally, we need to arrange our panels so that the most important graphs are in that Z pattern, spaced appropriately, and properly sized.
-We may need to add some spacing to our dashboard.  To do so, choose the blank text panel we have saved in our library.
+## panel を配置する
+最後に、最も重要なグラフが Z パターンに沿って配置され、適切な間隔とサイズになるように panel を並べ替える必要があります。
+dashboard にスペースを追加する必要があるかもしれません。その場合は、library に保存されている空白の text panel を使います。
 
-1. First, let's add a row for our RED metrics (request rates, errors, and duration/latency).
-    *  Click on the _Add_ button click _Row_.
-    *  Hover over the new row, click on the Gear icon to change the row title to *Service RED Metrics*. Going left to right, move Server Requests per Second, SLO Status (Errors) per Data Center, and Latency for Sockshop App on the top row.
-2. Add a 2nd row called *Key Performance Indicators*
-    * Move the rest of the graphs into this grouping.  In the middle row, going left to right, move Service Apdex, Latency quantiles, and then our logo to this middle row.
-    * In the bottom area, we should have K8s Service Status on the left, Infrastucture - Error Score below it, and the Customer Activity map to the right of those two graphs.
-    * To reorder rows, click on the arrow to the left of each row's title to collapse the row, then use the dragging handle at the far right of the row to move it up or down.
-4. Click _Add_ and then _Import from Library_. Choose Panel, "Blank Space".  Add a small row of blank space after our row of Service RED Metrics.
-5. Choose _Add Panel_ and then _Import from Library_. Choose Panel, "Blank Space".  Add a small row of blank space after our top row of Key Performance Indicators.
+1. まず、RED metrics（リクエストレート、エラー、レイテンシ）用の row を追加します。
+    *  _Add_ ボタンをクリックし、_Row_ をクリックします。
+    *  新しい row にカーソルを合わせ、歯車アイコンをクリックして row のタイトルを *Service RED Metrics* に変更します。左から右の順に、Server Requests per Second、SLO Status (Errors) per Data Center、Latency for Sockshop App を上段に移動します。
+2. 2番目の row を *Key Performance Indicators* という名前で追加します
+    * 残りのグラフをこのグループに移動します。中段は左から右の順に、Service Apdex、Latency quantiles、ロゴを配置します。
+    * 下段は、左側に K8s Service Status、その下に Infrastructure - Error Score、その右側に Customer Activity の地図を配置します。
+    * row の並び順を変更するには、各 row タイトルの左にある矢印をクリックして row を折りたたみ、row の右端にあるドラッグハンドルを使って上下に移動します。
+4. _Add_ をクリックし、_Import from Library_ を選択します。Panel "Blank Space" を選択し、Service RED Metrics の row の後に小さな空白の row を追加します。
+5. _Add Panel_ をクリックし、_Import from Library_ を選択します。Panel "Blank Space" を選択し、Key Performance Indicators の上段の後に小さな空白の row を追加します。
 
-After arranging our panels and adding space, your dashboard should look something similar to this:
+panel を配置してスペースを追加すると、dashboard は以下のような表示になるはずです:
 
 ![Final-Dashboard One](img/dashboard-one.png)
 
-If you didn't quite finish but would like a working copy of our result you can import the dashboard:
-Steps to Import:
-1. Click the menu button (☰) at the top left, and then click on *Dashboards*.
-2. On the Dashboards screen, click the *New* button and then click *Import*.
-3. In the Import via grafana.com field, type in `16414` and then click *Load*.
-4. You will be asked to choose three of your dashboard's data sources:
-    * For TestData DB, choose `TestData DB`.
-    * For Prometheus (Cloud), choose `Prometheus (Cloud)`.
-    * For LokiNginxLogs, choose `LokiNginxLogs`.
-    * Click on *Import*.
+完了しなかった場合でも、完成版の dashboard を import できます:
+import の手順:
+1. 左上のメニューボタン（☰）をクリックし、*Dashboards* をクリックします。
+2. Dashboards 画面で *New* ボタンをクリックし、*Import* をクリックします。
+3. Import via grafana.com フィールドに `16414` と入力し、*Load* をクリックします。
+4. data source を3つ選択するよう求められます:
+    * TestData DB には `TestData DB` を選択してください。
+    * Prometheus (Cloud) には `Prometheus (Cloud)` を選択してください。
+    * LokiNginxLogs には `LokiNginxLogs` を選択してください。
+    * *Import* をクリックします。

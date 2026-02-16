@@ -1,50 +1,49 @@
-# Individual Challenge: KitchenOps !!! 
+# Individual Challenge: KitchenOps（個人チャレンジ: KitchenOps）!!!
 
-You have been recently hired to run your restaurant's KitchenOps program.  The restaurant is so close to its 5th Michelin star, you can taste it!
+あなたはレストランの KitchenOps プログラムの責任者として採用されました。このレストランはミシュラン5つ星まであと一歩のところまで来ています！
 
-One way to attain that 5th star is to deliver consistently perfect results in meal preparation.  This means having complete control over:
-* Oven, stovetop, and grill temperature settings
-* Shelflife of the freshest ingredients (and the soup!)
-* Consistency of food preparation times per meal time
-* and more.
+5つ星を獲得するための鍵は、調理において常に完璧な仕上がりを実現することです。つまり、以下を完全にコントロールする必要があります:
+* オーブン、コンロ、グリルの温度設定
+* 最も新鮮な食材（とスープ！）の消費期限管理
+* 食事の時間帯ごとの調理時間の一貫性
+* その他多数
 
-Being in the 4-star tier, this restaurant has recently invested in IoT telemetry to track these sorts of things, and the restaurant owner's IT person has already created a set of library panels for these sensors. 
+4つ星の実力を持つこのレストランは、最近 IoT テレメトリを導入し、これらの項目を追跡できるようになりました。レストランオーナーの IT 担当者が、これらのセンサー用の library panel をすでに作成しています。
 
-All we have to do is present them in a way that is easy for the kitchen staff to understand and attractive enough -  if they were to peek into the kitchen - for an anonymous Michelin inspector to notice! 
+私たちの仕事は、キッチンスタッフが理解しやすく、さらにミシュランの覆面調査員がキッチンを覗いた際に目を引くような見栄えの良い dashboard を作ることです！
 
-At the end of this exercise, everyone will vote on who has the best dashboard (you cannot vote for your own dashboard).  Please *name your team* so that everyone knows who to vote for....good luck!
+この演習の最後に、全員で最も優れた dashboard に投票します（自分の dashboard には投票できません）。投票の際に分かるよう、*チーム名を決めて*おいてください。頑張りましょう！
 
-A couple of kitchen standards:
-1. While ground spices are typically replaced at 6 months and other spices should be replaced every 2-4 years, this kitchen tries to keep spices for no more than *4 months* - when they remember.
- 
-2. The grill needs to kept at *387 degrees*, plus or minus 7 degrees for our signature "Bodacious Burger"
+キッチンの基準をいくつか紹介します:
+1. 一般的に、粉末スパイスは6ヶ月、その他のスパイスは2〜4年で交換しますが、このキッチンでは *4ヶ月以内* にスパイスを交換するようにしています（忘れなければ）。
 
-3. We need to track how long each chef cooks our signature, pan-seared "Choice Coho (Salmon)".  Since we individually choose each salmon fillet for consistent thickness, freshness and quality, we are still getting inconsistent ratings from our guests.  Each side needs to be cooked for *150 seconds* - no more, no less.
+2. 当店自慢の "Bodacious Burger" のために、グリルの温度は *387°F*（プラスマイナス7°F）に保つ必要があります。
 
-4. The refrigerator needs to stay between *35 and 38 degrees*.  Some unknown chef has nightmares from a former food safety violation when their previous restaurant's temperature was found to be 41 degress (a food safety violation) and now keeps turning down the temperature, making the eggs freeze on occasion.
+3. 当店自慢のフライパン焼き "Choice Coho（サーモン）" を各シェフがどれくらいの時間で焼いているかを追跡する必要があります。厚み、鮮度、品質が一定になるようサーモンフィレを個別に選んでいますが、お客様からの評価にはまだばらつきがあります。片面 *150秒* ずつ — それ以上でもそれ以下でもダメです。
 
-5. The lobster mac n' cheese is so popular that one of the ovens is now the dedicated "MacOven".  It stays at *375 degrees* for best results but can vary 25 degrees in either direction.
+4. 冷蔵庫の温度は *35〜38°F* の間に保つ必要があります。以前の勤務先で食品安全違反（41°F で発覚）を経験したシェフが、トラウマから温度を下げすぎてしまい、卵が凍ってしまうことがあります。
 
-6. Our restaurant's multicolor mood lighting is incredible. Let's make sure 100% of the lights are working.
+5. ロブスター・マカロニ＆チーズは大人気のため、オーブンの1台を専用の "MacOven" にしています。最適な温度は *375°F* ですが、前後25°Fの変動は許容範囲です。
 
-7. Let's make sure the room temperature is 70 degrees (F) in all 8 zones of our dining rooms.  We don't want our guests to suffer the chill below 69 or a heat above 71 degrees Farenheit.
+6. 当店のマルチカラーのムードライティングは素晴らしい演出です。全照明が100%稼働していることを確認しましょう。
+
+7. ダイニングルーム全8ゾーンの室温が70°F（華氏）であることを確認しましょう。69°F以下の寒さや71°F以上の暑さはお客様にとって不快です。
 
 
-## Directions
-**Prerequisite**: We first need to import the `Dashboard Makeover Challenge` dashboard.
-Steps to Import:
-1. Click the menu button (☰) at the top left, and then click on *Dashboards*.
-2. On the Dashboards screen, click the *New* button and then click *Import*.
-3. On the Import Dashboard screen, in the *Import via grafana.com* field, type in `16415` and then click *Load*.
-4. You will be asked to choose three of your dashboard's data sources:
-    -  For TestData DB, choose `TestData DB`.
-    - For Google Sheets, choose `Google Sheets`.
-    - You will also notice that library panels will be imported automatically.
-    - Click on *Import*.
-  
-Using this dashboard as a starting point, and using the techniques you learned from the workshop, create the best dashboard possible and send the results to your Extreme Dashboarding presenter.  The top 7 dashboards will win some cool Grafana swag.
+## 手順
+**前提条件**: まず、`Dashboard Makeover Challenge` の dashboard を import する必要があります。
+import の手順:
+1. 左上のメニューボタン（☰）をクリックし、*Dashboards* をクリックします。
+2. Dashboards 画面で *New* ボタンをクリックし、*Import* をクリックします。
+3. Import Dashboard 画面の *Import via grafana.com* フィールドに `16415` と入力し、*Load* をクリックします。
+4. data source を3つ選択するよう求められます:
+    -  TestData DB には `TestData DB` を選択してください。
+    - Google Sheets には `Google Sheets` を選択してください。
+    - library panel は自動的に import されます。
+    - *Import* をクリックします。
 
-For inspiration, you can import dashboard `16417`.
+この dashboard を出発点として、ワークショップで学んだテクニックを活用し、最高の dashboard を作成してください。完成したら、Extreme Dashboarding のプレゼンターに結果を送ってください。上位7つの dashboard には Grafana のグッズが贈られます。
 
-Good Luck!!!
+インスピレーションが欲しい場合は、dashboard `16417` を import してみてください。
 
+頑張ってください！！！
